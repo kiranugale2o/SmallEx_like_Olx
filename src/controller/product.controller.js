@@ -63,3 +63,20 @@ export const deleteProduct = async (req, res) => {
     return res.status(400).json({ status: false, message: error.message });
   }
 };
+
+//get your selling products
+export const yourProducts = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const products = await Products.find({ ownerId: id });
+    if (products.length !== 0) {
+      return res.status(200).json({ status: true, products: products });
+    } else {
+      return res
+        .status(400)
+        .json({ status: false, message: "Sell A Products On SmallEx " });
+    }
+  } catch (error) {
+    return res.status(400).json({ status: false, message: error.message });
+  }
+};
