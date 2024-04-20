@@ -47,3 +47,19 @@ export const singleProduct = async (req, res) => {
     return res.status(400).json({ status: false, message: error.message });
   }
 };
+
+//remove the product
+
+export const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Products.findByIdAndDelete(id);
+    if (product) {
+      return res
+        .status(200)
+        .json({ message: "Product Remove SuccessFully ! " });
+    }
+  } catch (error) {
+    return res.status(400).json({ status: false, message: error.message });
+  }
+};
