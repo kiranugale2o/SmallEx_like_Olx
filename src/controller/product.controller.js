@@ -1,8 +1,11 @@
 import mongoose from "mongoose";
 import Products from "../models/products.model.js";
+import productValidation from "../validation/productValidation.js";
 
+//create product handler
 export const createProduct = async (req, res) => {
   try {
+    await productValidation.validateAsync(req.body);
     const product = await Products(req.body);
     await product.save();
     if (product) {
@@ -11,8 +14,22 @@ export const createProduct = async (req, res) => {
         .json({ status: true, message: "Product Send SuccessFully " });
     }
   } catch (error) {
-    return res
-      .status(400)
-      .json({ status: false, message: "Somethings else !" });
+    return res.status(400).json({ status: false, message: error.message });
+  }
+};
+
+//get All product for selling
+export const getProducts = async (req, res) => {
+  try {
+    const products = await Products.find({});
+    if (products.length !== 0) {
+      return res.status(200).json(products);
+    } else {
+      return res
+        .status(200)
+        .json({ status: false, message: "No Selling Any products" });
+    }
+  } catch (error) {
+    return res.status(400).json({ status: false, message: error.message });
   }
 };
