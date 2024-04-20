@@ -13,6 +13,7 @@ const userValidation = Joi.object({
     }),
   pincode: Joi.string().required().min(6).max(6).message("Invalid Pincode "),
   password: Joi.string().required(),
+  tokens: Joi.array(),
 });
 
 export default userValidation;
