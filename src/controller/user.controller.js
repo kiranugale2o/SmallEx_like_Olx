@@ -44,3 +44,18 @@ export const loginHandler = async (req, res) => {
     return res.status(400).json({ status: false, message: error.message });
   }
 };
+
+//update user profile
+export const updateProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateUser = await User.findByIdAndUpdate(id, req.body);
+    if (updateUser) {
+      return res.status(200).json({ message: "update successfully " });
+    } else {
+      return res.status(400).json({ message: "user not found " });
+    }
+  } catch (error) {
+    return res.status(400).json({ status: false, message: error.message });
+  }
+};
