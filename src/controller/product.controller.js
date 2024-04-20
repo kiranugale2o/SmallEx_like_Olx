@@ -19,7 +19,7 @@ export const createProduct = async (req, res) => {
 };
 
 //get All product for selling
-export const getProducts = async (req, res) => {
+export const allProducts = async (req, res) => {
   try {
     const products = await Products.find({});
     if (products.length !== 0) {
@@ -28,6 +28,20 @@ export const getProducts = async (req, res) => {
       return res
         .status(200)
         .json({ status: false, message: "No Selling Any products" });
+    }
+  } catch (error) {
+    return res.status(400).json({ status: false, message: error.message });
+  }
+};
+
+//get single product
+
+export const singleProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Products.findById(id);
+    if (product) {
+      return res.status(200).json(product);
     }
   } catch (error) {
     return res.status(400).json({ status: false, message: error.message });
