@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
-  ownerId:{
-    type:new mongoose.Schema.Types.ObjectId,
-    ref:"user"
+  ownerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
   },
   name: {
     type: String,
@@ -22,6 +22,10 @@ const productSchema = new mongoose.Schema({
     require: true,
   },
   location: {
+    type: String,
+    require: true,
+  },
+  pincode: {
     type: String,
     require: true,
   },
