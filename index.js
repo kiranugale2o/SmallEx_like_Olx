@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 dbconnection();
 let originAllow = {
-  origin: "http://localhost:5173",
+  origin: "*",
   methods: "PUT,GET,POST,DELETE,PATCH,HEAD",
   credentials: true,
 };
@@ -18,6 +18,6 @@ app.use(cors(originAllow));
 app.use(express.urlencoded({ extended: false }));
 app.use("/user", userRoute);
 app.use("/product", productRoute);
-app.listen(4000, (err) => {
-  console.log("server is running o n 4000 ort ");
+app.listen(process.env.PORT || 4000, (err) => {
+  console.log("server is running on Port  ", process.env.PORT);
 });
