@@ -3,7 +3,9 @@ import Joi from "joi";
 const productValidation = Joi.object({
   ownerId: Joi.string().required(),
   name: Joi.string().required(),
-  product_img: Joi.string().required(),
+  product_img1: Joi.string(),
+  product_img2: Joi.string(),
+  product_img3: Joi.string(),
   price: Joi.string().required(),
   product_des: Joi.string()
     .required()
