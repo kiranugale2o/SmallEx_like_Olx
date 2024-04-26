@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 import Products from "../models/products.model.js";
 import productValidation from "../validation/productValidation.js";
+import createRedisClient from "../redis/client.js";
+import { promisify } from "util";
+import redis from "redis";
 
 //create product handler
 export const createProduct = async (req, res) => {
@@ -20,17 +23,40 @@ export const createProduct = async (req, res) => {
 
 //get All product for selling
 export const allProducts = async (req, res) => {
+  let client = await createRedisClient();
   try {
-    const products = await Products.find({});
-    if (products.length !== 0) {
-      return res.status(200).json(products);
+    const data = client.get("Product", (err, reply) => {
+      if (err) {
+        console.error("Redis SET Error:", err);
+      } else {
+        console.log("Data stored in Redis:", reply);
+      }
+    });
+    if (Object.keys(data).length !== 0) {
+      return res.status(200).json({ data: data });
     } else {
-      return res
-        .status(200)
-        .json({ status: false, message: "No Selling Any products" });
+      const products = await Products.find({}).populate("ownerId");
+      if (products.length !== 0) {
+        await client.set("Product", JSON.stringify(products), (err, reply) => {
+          if (err) {
+            console.error("Redis SET Error:", err);
+          } else {
+            console.log("Data stored in Redis:", reply);
+          }
+        });
+
+        return res.status(200).json(products);
+      } else {
+        return res
+          .status(200)
+          .json({ status: false, message: "No Selling Any products" });
+      }
     }
   } catch (error) {
+    console.log(error);
     return res.status(400).json({ status: false, message: error.message });
+  } finally {
+    client.quit();
   }
 };
 
@@ -75,6 +101,20 @@ export const yourProducts = async (req, res) => {
       return res
         .status(400)
         .json({ status: false, message: "Sell A Products On SmallEx " });
+    }
+  } catch (error) {
+    return res.status(400).json({ status: false, message: error.message });
+  }
+};
+
+export const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const update = await Products.findByIdAndUpdate(id, req.body);
+    if (update) {
+      return res.status(200).json({ message: "update successfully " });
+    } else {
+      return res.status(400).json({ message: "something wrong ! " });
     }
   } catch (error) {
     return res.status(400).json({ status: false, message: error.message });
