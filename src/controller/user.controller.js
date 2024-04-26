@@ -34,7 +34,7 @@ export const loginHandler = async (req, res) => {
         const token = await user.generateAuthToken();
         return res
           .status(200)
-          .json({ message: "login successfull", token: token });
+          .json({ message: "login successfull", smallEx_access_token: token });
       } else {
         return res.status(400).json({ message: "invalid Password" });
       }
