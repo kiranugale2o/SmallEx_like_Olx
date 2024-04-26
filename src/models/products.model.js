@@ -9,7 +9,15 @@ const productSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  product_img: {
+  product_img1: {
+    type: String,
+    require: true,
+  },
+  product_img2: {
+    type: String,
+    require: true,
+  },
+  product_img3: {
     type: String,
     require: true,
   },
