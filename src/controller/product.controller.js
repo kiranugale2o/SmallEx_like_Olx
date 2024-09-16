@@ -23,28 +23,10 @@ export const createProduct = async (req, res) => {
 
 //get All product for selling
 export const allProducts = async (req, res) => {
-  let client = await createRedisClient();
-  try {
-    const data = client.get("Product", (err, reply) => {
-      if (err) {
-        console.error("Redis SET Error:", err);
-      } else {
-        console.log("Data stored in Redis:", reply);
-      }
-    });
-    if (Object.keys(data).length !== 0) {
-      return res.status(200).json({ data: data });
-    } else {
-      const products = await Products.find({}).populate("ownerId");
-      if (products.length !== 0) {
-        await client.set("Product", JSON.stringify(products), (err, reply) => {
-          if (err) {
-            console.error("Redis SET Error:", err);
-          } else {
-            console.log("Data stored in Redis:", reply);
-          }
-        });
 
+  try {
+   
+      const products = await Products.find({}).populate("ownerId");
         return res.status(200).json(products);
       } else {
         return res
@@ -55,8 +37,6 @@ export const allProducts = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(400).json({ status: false, message: error.message });
-  } finally {
-    client.quit();
   }
 };
 
